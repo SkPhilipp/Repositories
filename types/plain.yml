@@ -1,0 +1,2 @@
+workflows:
+  - generate-readme.yml

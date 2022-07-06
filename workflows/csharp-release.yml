@@ -1,0 +1,71 @@
+name: c# release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ github.token }}
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '2.1.x'
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: Build
+        env:
+          ORGANIZATION_TOKEN: ${{ secrets.GH_TOKEN_SCOPE_PACKAGES }}
+        run: |
+          dotnet nuget add source --username USERNAME --password "${ORGANIZATION_TOKEN}" --store-password-in-clear-text --name github-effortgames "https://nuget.pkg.github.com/EffortGames/index.json"
+          dotnet build .
+      - name: Test
+        run: |
+          dotnet test .
+      - name: Publish
+        shell: bash
+        env:
+          PROJECTS: Areas Engine Entities Items Modifiers Movement Scheduling Serializers Trading
+          REPOSITORY_TOKEN: ${{ github.token }}
+        run: |
+          set -o errtrace -o functrace
+          trap 'echo "erred at ${LINENO} ${BASH_COMMAND}"' ERR
+          
+          # obtain .github/VERSION
+          if [ ! -f .github/VERSION ]; then
+            echo "1.0.0" > .github/VERSION
+          fi
+          VERSION=$(cat .github/VERSION)
+          dotnet pack . --configuration Release "-p:Version=${VERSION}"
+
+          # push new version
+          git config --global user.email "automation@effortgames.nl"
+          git config --global user.name "EffortGames Automation"
+          MAJOR=$(echo "${VERSION}" | cut -d'.' -f1)
+          MINOR=$(echo "${VERSION}" | cut -d'.' -f2)
+          PATCH=$(echo "${VERSION}" | cut -d'.' -f3)
+          PATCH=$(("${PATCH}" + 1))
+          echo "${MAJOR}.${MINOR}.${PATCH}" > .github/VERSION
+          git add .github/VERSION
+          git commit -m "release ${VERSION}"
+          git tag "${VERSION}"
+          git push origin master --tags
+
+          RELEASE_CSPROJ_FILES=$(ls */*.csproj | grep -v .Tests | grep -v ^Test)
+          RELEASE_PROJECTS=$(echo "${RELEASE_CSPROJ_FILES}" | xargs -n1 dirname)
+
+          for i in ${RELEASE_PROJECTS}; do
+            echo "Publishing ${i}..."
+            cd $i
+            dotnet nuget push "bin/Release/*.nupkg" --api-key "${REPOSITORY_TOKEN}" --source "github-effortgames"
+            cd ../
+          done
