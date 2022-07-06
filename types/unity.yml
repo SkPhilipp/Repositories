@@ -1,3 +1,4 @@
 workflows:  
   - generate-readme.yml
   - unity-*
+  - sonar.yml

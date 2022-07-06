@@ -1,3 +1,4 @@
 workflows:  
   - generate-readme.yml
   - csharp-*
+  - sonar.yml
