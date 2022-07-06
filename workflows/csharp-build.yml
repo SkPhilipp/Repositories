@@ -25,8 +25,9 @@ jobs:
         env:
           TOKEN: ${{ secrets.GH_TOKEN_SCOPE_PACKAGES }}
         run: |
+          dotnet tool install --global dotnet-sonarscanner --version 5.7.1
+          dotnet sonarscanner begin /k EffortGames_${{ github.event.repository.name }} /d . /o . /v 5.7.1 /sonar-project-name EffortGames_${{ github.event.repository.name }} /sonar-organization effortgames /s /dotnet 5.0.x
           dotnet nuget add source --username USERNAME --password "${TOKEN}" --store-password-in-clear-text --name github-effortgames "https://nuget.pkg.github.com/EffortGames/index.json"
           dotnet build .
-      - name: Test
-        run: |
           dotnet test .
+          dotnet sonarscanner end /k EffortGames_${{ github.event.repository.name }} /d . /o . /v 5.7.1 /sonar-project-name EffortGames_${{ github.event.repository.name }} /sonar-organization effortgames /s /dotnet 5.0.x
