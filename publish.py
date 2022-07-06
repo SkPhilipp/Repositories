@@ -36,7 +36,14 @@ for repository_filename in repository_filenames:
     repository_yml['url'] = f"https://github.com/EffortGames/{repository_id}.git"
     repository_mapping[repository_id] = repository_yml
 
-for repository_id, repository_yml in repository_mapping.items():
+# check for presence of arguments
+if len(os.sys.argv) > 1:
+    allowed_repositories = os.sys.argv[1:]
+else:
+    allowed_repositories = [repository_id for repository_id in repository_mapping]
+
+for repository_id in allowed_repositories:
+    repository_yml = repository_mapping[repository_id]
     print("---")
     print(f"Cloning {repository_id}")
     subprocess.run(["git", "clone", "--quiet", "--depth=1", repository_yml['url'], "repository_tmp"])
