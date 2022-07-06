@@ -1,5 +1,6 @@
 #
 # from https://github.com/SonarSource/sonarcloud-github-action#usage
+# minimally adjusted to add properties
 #
 on:
   # Trigger analysis when pushing in master or pull requests, and when creating
@@ -18,8 +19,13 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
+    - id:
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
+      with:
+        args: >
+          -Dsonar.organization=EffortGames
+          -Dsonar.projectKey=EffortGames_${{ github.event.repository.name }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
