@@ -27,6 +27,7 @@ jobs:
           TOKEN_SONAR: ${{ secrets.SONAR_TOKEN }}
           PROJECT_ID: EffortGames_${{ github.event.repository.name }}
         run: |
+          cd RPG
           dotnet tool install --global dotnet-sonarscanner --version 5.7.1
           dotnet tool install --global dotnet-coverage --version 17.3.6
           dotnet sonarscanner begin /o:"effortgames" \

@@ -68,7 +68,7 @@ for repository_id in allowed_repositories:
         continue
     # commit and push
     print(f"Committing and pushing {repository_id}")
-    subprocess.run(["git", "commit", "-m", "Update"])
+    subprocess.run(["git", "commit", "-m", "#- Managed repository update"])
     os.system('git push')
     os.chdir('..')
     rm_ok = subprocess.run(["rm", "-rf", "repository_tmp"])
