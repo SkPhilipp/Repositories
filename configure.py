@@ -11,8 +11,14 @@ for repository_filename in repository_filenames:
     repository_yml = yaml.load(open(f"repositories/{repository_filename}"), Loader=yaml.FullLoader)
     repository_mapping[repository_id] = repository_yml
 
+# check for presence of arguments
+if len(os.sys.argv) > 1:
+    allowed_repositories = os.sys.argv[1:]
+else:
+    allowed_repositories = [repository_id for repository_id in repository_mapping]
+
 # apply global settings
-for repository_id, _ in repository_mapping.items():
+for repository_id in allowed_repositories:
     api_url = f"https://api.github.com/repos/EffortGames/{repository_id}"
     api_headers = {
         "Accept": "application/vnd.github+json",
