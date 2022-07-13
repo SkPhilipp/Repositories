@@ -26,7 +26,7 @@ To publish changes to specific [repositories](/repositories), use like so:
 
 ## Configure
 
-Configurees [workflows](/workflows) into GitHub [repositories](/repositories) according to their [type](/types).
+Configures [workflows](/workflows) into GitHub [repositories](/repositories) according to their [type](/types).
 
 ### Configuring all
 
