@@ -7,6 +7,7 @@
 Seen in https://imgur.com/71ls9dt
 
 Modify the Target Framework of each C# project to a dotnet version installed by the workflows.
+Alternatively modify the workflow to install the referenced dotnet version.
 
 ### At `dotnet nuget add source`
 
