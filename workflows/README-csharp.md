@@ -20,3 +20,22 @@ The GitHub Packages secret is not valid on this repository. Make the organizatio
 Seen in https://imgur.com/6JH3pTy
 
 The project likely does not yet exist in sonarcloud.io/, navigate to the website and create a new project there for the repository.
+
+### At `dotnet nuget push`
+
+Seen in https://imgur.com/gL1z6VN
+
+The project has no RepositoryUrl configured in its .csproj file.
+
+Example .csproj file;
+
+```
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        (...)
+        <RepositoryUrl>https://github.com/EffortGames/YOUR_REPOSITORY.git</RepositoryUrl>
+    </PropertyGroup>
+
+</Project>
+```
